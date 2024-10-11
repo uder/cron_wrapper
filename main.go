@@ -7,12 +7,15 @@ import (
 type Args struct {
 	command string
 	timeout int
+	tmpdir  string
 }
 
 func parseArgs() *Args {
 	args := new(Args)
 	flag.IntVar(&args.timeout, "timeout", 7200, "timeout")
 	flag.IntVar(&args.timeout, "t", 7200, "timeout")
+	// TODO: change default to /tmp after development
+	flag.StringVar(&args.tmpdir, "tmpdir", "./tmp", "path to tmp dir")
 
 	flag.Parse()
 	args.command = flag.Arg(0)
@@ -24,7 +27,15 @@ func main() {
 	files := NewProcFiles("./tmp")
 	defer files.cleanup()
 
-	procState, duration := run(args, files)
-	report := NewReport(procState, files, duration)
-	report.Print()
+	command := NewCommand(args)
+	defer command.cleanup()
+
+	command.SetStartTs()
+	beginReport := NewBeginReport(command)
+	beginReport.Write()
+
+	run(command)
+	command.SetEndTs()
+	endReport := NewEndReport(command)
+	endReport.Write()
 }
