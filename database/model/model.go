@@ -1,6 +1,7 @@
 package model
 
 import (
+	"database/sql"
 	"gorm.io/gorm"
 )
 
@@ -10,22 +11,32 @@ type Table interface {
 
 type CommandRecords struct {
 	gorm.Model
-	RecordType string
-	RunId      uint64 `gorm:"uniqueIndex"`
+	RecordType string `gorm:"uniqueIndex:idx_runId_type"`
+	RunId      string `gorm:"uniqueIndex:idx_runId_type"`
 	Command    string
-	Timeout    int
+	ExitCode   sql.NullInt16   `gorm:"default:null"`
+	Duration   sql.NullFloat64 `gorm:"default:null"`
 }
 
 func (CommandRecords) TableName() string {
 	return "command_records"
 }
 
-func NewCommandRecord(recordType string, runId uint64, cmd string, timeout int) *CommandRecords {
+func NewCommandBeginRecord(recordType string, runId string, cmd string) *CommandRecords {
 	return &CommandRecords{
 		RunId:      runId,
 		RecordType: recordType,
 		Command:    cmd,
-		Timeout:    timeout,
+	}
+}
+
+func NewCommandEndRecord(recordType string, runId string, cmd string, exitCode int, duration float64) *CommandRecords {
+	return &CommandRecords{
+		RunId:      runId,
+		RecordType: recordType,
+		Command:    cmd,
+		ExitCode:   sql.NullInt16{Int16: int16(exitCode), Valid: true},
+		Duration:   sql.NullFloat64{Float64: duration, Valid: true},
 	}
 }
 
