@@ -26,4 +26,5 @@ go.work.sum
 
 .idea/
 tmp/
+log/
 db.sqlite

@@ -97,6 +97,18 @@ func (c *Command) ProcAttrs() *os.ProcAttr {
 	}
 }
 
+func (c *Command) ReportsDir() string {
+	return c.cliArgs.reportsDir
+}
+
+func (c *Command) enableBegin() bool {
+	return c.cliArgs.enableBegin
+}
+
+func (c *Command) enableStdoutOnSuccess() bool {
+	return c.cliArgs.enableStdoutOnSuccess
+}
+
 func (c *Command) cleanup() {
 	c.procFiles.cleanup()
 }
