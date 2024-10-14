@@ -118,7 +118,7 @@ func NewCommand(args *Args) *Command {
 		runId:     generateId(8),
 		hostname:  getHostname(),
 		cliArgs:   args,
-		procFiles: NewProcFiles(args.tmpdir),
+		procFiles: NewProcFiles(args.tmpDir),
 		//state:     NewCommandState(),
 	}
 }

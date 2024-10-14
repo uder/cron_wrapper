@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"log/slog"
 	"main/database"
 	"main/database/model"
 	"main/database/sqlite"
@@ -52,6 +51,7 @@ func parseArgs() *Args {
 	flag.BoolVar(&args.enableStdoutOnSuccess, "s", false, "enable Stdout on success. All types of reports are logged to reportsDir in any case. The flag enables Stdout reports in other types of media on success")
 
 	flag.BoolVar(&args.migrate, "migrate", false, "whether to migrate. All other args will be ignored")
+	flag.BoolVar(&args.enableDebug, "debug", false, "enable debug logs")
 
 	flag.Parse()
 	args.command = flag.Arg(0)
@@ -68,7 +68,7 @@ func getDataBase() database.DB {
 	return db
 }
 
-func migrate(db database.DB, logger *slog.Logger) {
+func migrate(db database.DB, logger Logger) {
 	for _, table := range model.Models() {
 		err := database.Migrate(db, table)
 		if err != nil {
@@ -77,10 +77,11 @@ func migrate(db database.DB, logger *slog.Logger) {
 		logger.Warn("Migration complete: " + table.TableName())
 	}
 }
-func getLogger() *slog.Logger {
-	logger := slog.Default()
-	return logger
-}
+
+//func getLogger() *slog.Logger {
+//	logger := slog.Default()
+//	return logger
+//}
 
 func getNumberUnfinishedTasks(db database.DB, args *Args) int {
 	unfinishedTasks := database.GetUnfinishedRecords(db, args.command, args.timeout)
@@ -88,8 +89,9 @@ func getNumberUnfinishedTasks(db database.DB, args *Args) int {
 }
 
 func main() {
-	logger := getLogger()
 	args := parseArgs()
+	logger := NewLogger(args.enableDebug)
+	logger.Info(args.String())
 	db := getDataBase()
 	if args.migrate {
 		migrate(db, logger)
@@ -104,9 +106,7 @@ func main() {
 	}
 
 	// TODO: check duration precision. Why duration is always an int number of Seconds
-	// TODO: Implement logging to files.
-	// TODO: Implement configuration of logging. Enable/Disable blocks and messages. eg Disable Begin messages or
-	// TODO: disable STDOUT on exitCode == 0
+	// TODO: Fix cli args. Flags params after positional are ignored.
 
 	command := NewCommand(args)
 	defer command.cleanup()
