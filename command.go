@@ -75,11 +75,11 @@ func (c *Command) Hostname() string {
 }
 
 func (c *Command) Timeout() int {
-	return c.cliArgs.timeout
+	return c.cliArgs.Timeout
 }
 
 func (c *Command) CommandLine() string {
-	return c.cliArgs.command
+	return c.cliArgs.Command
 }
 
 func (c *Command) CommandToExecute() *[]string {
@@ -98,15 +98,15 @@ func (c *Command) ProcAttrs() *os.ProcAttr {
 }
 
 func (c *Command) ReportsDir() string {
-	return c.cliArgs.reportsDir
+	return c.cliArgs.ReportsDir
 }
 
 func (c *Command) enableBegin() bool {
-	return c.cliArgs.enableBegin
+	return c.cliArgs.EnableBegin
 }
 
 func (c *Command) enableStdoutOnSuccess() bool {
-	return c.cliArgs.enableStdoutOnSuccess
+	return c.cliArgs.EnableStdoutOnSuccess
 }
 
 func (c *Command) cleanup() {
@@ -118,7 +118,7 @@ func NewCommand(args *Args) *Command {
 		runId:     generateId(8),
 		hostname:  getHostname(),
 		cliArgs:   args,
-		procFiles: NewProcFiles(args.tmpDir),
+		procFiles: NewProcFiles(args.TmpDir),
 		//state:     NewCommandState(),
 	}
 }
@@ -159,15 +159,3 @@ func NewProcFiles(dir string) *ProcFiles {
 		stderr: createTemp(dir, "stderr"),
 	}
 }
-
-//type CommandState struct {
-//	step         string // On what step is the command
-//	durationMs   int64
-//	processState *os.ProcessState
-//}
-//
-//func NewCommandState() *CommandState {
-//	return &CommandState{
-//		step: "BEGIN",
-//	}
-//}
