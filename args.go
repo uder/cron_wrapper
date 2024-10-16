@@ -22,6 +22,9 @@ type Args struct {
 	// TODO: revise the flag name and defaults for this flag
 	EnableStdoutOnSuccess bool `arg:"-s" default:"false" help:"whether to send stdout on success"`
 	EnableDebug           bool `arg:"-d" default:"false" help:"enable debug logging"`
+
+	SqliteDatabase string `arg:"--sqlite-db" default:"db.sqlite" help:"sqlite database file"`
+	dbType         string
 }
 
 func (a *Args) String() string {
@@ -39,8 +42,19 @@ func (a *Args) String() string {
 		"; ")
 }
 
+func (a *Args) setDbType(dbType string) {
+	a.dbType = dbType
+}
+
+func (a *Args) DbType() string {
+	return a.dbType
+}
+
 func parseArgs() *Args {
 	var args Args
 	arg.MustParse(&args)
+	if args.SqliteDatabase != "" {
+		args.setDbType("sqlite")
+	}
 	return &args
 }
