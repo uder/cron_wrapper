@@ -1,7 +1,7 @@
 package main
 
 import (
-	"math/rand"
+	"math/rand/v2"
 	"os"
 	"syscall"
 	"time"
@@ -19,7 +19,7 @@ func generateId(length int) string {
 	var hex = []rune("0123456789abcdef")
 	b := make([]rune, length)
 	for i := range b {
-		b[i] = hex[rand.Intn(len(hex))]
+		b[i] = hex[rand.IntN(len(hex))]
 	}
 	return string(b)
 }
@@ -54,9 +54,9 @@ func (c *Command) SetEndTs() {
 	c.endTs = time.Now()
 }
 
-//func (c *Command) EndTs() time.Time {
-//	return c.endTs
-//}
+func (c *Command) EndTs() time.Time {
+	return c.endTs
+}
 
 func (c *Command) SetProcState(pState *os.ProcessState) {
 	c.procState = pState

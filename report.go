@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"main/database"
-	"main/database/model"
 	"os"
 	"path"
 	"strconv"
@@ -54,7 +52,7 @@ type BeginReport struct {
 	commandLine string
 	runId       string
 	hostname    string
-	db          database.DB
+	// db          database.DB
 	reportsDir  string
 	enableBegin bool
 }
@@ -76,17 +74,6 @@ func (r *BeginReport) String() string {
 	return strings.Join([]string{header, body, delimiter()}, "\n")
 }
 
-func (r *BeginReport) insertDb() {
-	record := model.NewCommandBeginRecord(r.Type(), r.runId, r.commandLine)
-	r.db.Conn().Create(record)
-}
-
-func (r *BeginReport) writeToFile() {
-	record := model.NewCommandBeginRecord(r.Type(), r.runId, r.commandLine)
-	r.db.Conn().Create(record)
-
-}
-
 func (r *BeginReport) print() {
 	if r.enableBegin {
 		fmt.Print(r.String())
@@ -95,17 +82,16 @@ func (r *BeginReport) print() {
 
 func (r *BeginReport) Write() {
 	r.print()
-	r.insertDb()
+	// r.insertDb()
 	writeToFile(getReportFileName(r.reportsDir), r.String())
 }
 
-func NewBeginReport(command *Command, db database.DB) *BeginReport {
+func NewBeginReport(command *Command) *BeginReport {
 	return &BeginReport{
 		startTs:     command.StartTs(),
 		commandLine: command.CommandLine(),
 		runId:       command.RunId(),
 		hostname:    command.Hostname(),
-		db:          db,
 		reportsDir:  command.ReportsDir(),
 		enableBegin: command.enableBegin(),
 	}
@@ -121,7 +107,6 @@ type EndReport struct {
 	pid                  int
 	stdout               string
 	stderr               string
-	db                   database.DB
 	reportsDir           string
 	enableStoutOnSuccess bool
 }
@@ -204,18 +189,12 @@ func (r *EndReport) print() {
 	fmt.Print(report)
 }
 
-func (r *EndReport) insertDb() {
-	record := model.NewCommandEndRecord(r.Type(), r.runId, r.commandLine, r.exitCode, r.duration)
-	r.db.Conn().Create(record)
-}
-
 func (r *EndReport) Write() {
 	r.print()
-	r.insertDb()
 	writeToFile(getReportFileName(r.reportsDir), r.String())
 }
 
-func NewEndReport(command *Command, db database.DB) *EndReport {
+func NewEndReport(command *Command) *EndReport {
 	return &EndReport{
 		startTs:              command.StartTs(),
 		exitCode:             command.procState.ExitCode(),
@@ -226,7 +205,6 @@ func NewEndReport(command *Command, db database.DB) *EndReport {
 		pid:                  command.procState.Pid(),
 		stdout:               readFile(command.procFiles.stdout.Name()),
 		stderr:               readFile(command.procFiles.stderr.Name()),
-		db:                   db,
 		reportsDir:           command.ReportsDir(),
 		enableStoutOnSuccess: command.enableStdoutOnSuccess(),
 	}

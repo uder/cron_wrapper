@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 	"sync"
-	"syscall"
+	"golang.org/x/sys/unix"
 	"time"
 )
 
@@ -71,7 +71,7 @@ func runKiller(timeout int, chs *runChannels) {
 
 	select {
 	case <-chRingClock:
-		err := syscall.Kill(-pid, syscall.SIGKILL)
+		err := unix.Kill(-pid, unix.SIGKILL)
 		if err != nil {
 			panic(err)
 		}
