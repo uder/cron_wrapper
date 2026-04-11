@@ -10,8 +10,9 @@ import (
 type Args struct {
 	Command  string `arg:"positional, required" help:"command to execute"`
 	Timeout  int    `arg:"-t,--timeout" default:"7200" help:"timeout in seconds"`
+
+	// TODO Revise the flag and the logic for parallel execution
 	Parallel int    `arg:"-p,--parallel" default:"1" help:"max number of parallel executions"`
-	Migrate  bool   `arg:"--migrate" default:"false" help:"perform migration. Exit after migration complete"`
 
 	// TODO: change default to /tmp after development. Revise the flag name
 	TmpDir string `arg:"--tmpdir" default:"./tmp" help:"directory to store temporary files"`
@@ -23,9 +24,6 @@ type Args struct {
 	// TODO: revise the flag name and defaults for this flag
 	EnableStdoutOnSuccess bool `arg:"-s" default:"false" help:"whether to send stdout on success"`
 	EnableDebug           bool `arg:"-d" default:"false" help:"enable debug logging"`
-
-	SqliteDatabase string `arg:"--sqlite-db" default:"db.sqlite" help:"sqlite database file"`
-	dbType         string
 }
 
 func (a *Args) String() string {
@@ -33,7 +31,6 @@ func (a *Args) String() string {
 		"Command: " + a.Command,
 		"Timeout: " + strconv.Itoa(a.Timeout),
 		"Parallel: " + strconv.Itoa(a.Parallel),
-		"Migrate: " + strconv.FormatBool(a.Migrate),
 		"Tmp Dir: " + a.TmpDir,
 		"Reports Dir: " + a.ReportsDir,
 		"Enable Begin: " + strconv.FormatBool(a.EnableBegin),
@@ -43,19 +40,9 @@ func (a *Args) String() string {
 		"; ")
 }
 
-func (a *Args) setDbType(dbType string) {
-	a.dbType = dbType
-}
-
-func (a *Args) DbType() string {
-	return a.dbType
-}
 
 func ParseArgs() *Args {
 	var a Args
 	arg.MustParse(&a)
-	if a.SqliteDatabase != "" {
-		a.setDbType("sqlite")
-	}
 	return &a
 }
