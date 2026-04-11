@@ -76,22 +76,3 @@ func EndingStringReport(r *EndReport, withStdOut bool, withStdErr bool) string {
 	}
 	return rep
 }
-
-// func (r *EndReport) print() {
-// 	var rep string
-// 	if r.exitCode == 0 && r.enableStoutOnSuccess {
-// 		rep = r.StringReport(true, true)
-// 	}
-// 	if r.exitCode == 0 && !r.enableStoutOnSuccess {
-// 		rep = r.StringReport(false, false)
-// 	}
-// 	if r.exitCode != 0 {
-// 		rep = r.StringReport(true, true)
-// 	}
-// 	fmt.Print(rep)
-// }
-
-// func (r *EndReport) Write() {
-// 	r.print()
-// 	WriteToFile(GetReportFileName(r.reportsDir), r.String())
-// }
