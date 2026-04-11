@@ -2,101 +2,12 @@ package report
 
 import (
 	"fmt"
-	"os"
-	"path"
 	"strconv"
 	"strings"
 	"time"
 
 	"cron_wrapper/internal/command"
 )
-
-func PrepareReportDir(reportDir string) {
-	if _, err := os.Stat(reportDir); os.IsNotExist(err) {
-		err = os.Mkdir(reportDir, 0755)
-	}
-}
-
-func readFile(filePath string) string {
-	body, err := os.ReadFile(filePath)
-	if err != nil {
-		panic(err)
-	}
-	return string(body)
-}
-
-func writeToFile(filename string, record string) {
-	f, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
-	if err != nil {
-		panic(err)
-	}
-	defer func() {
-		if err := f.Close(); err != nil {
-			panic(err)
-		}
-	}()
-	_, err = f.WriteString(record)
-	if err != nil {
-		panic(err)
-	}
-}
-
-func getReportFileName(dir string) string {
-	filename := time.Now().Format(time.DateOnly) + ".log"
-	return path.Join(dir, filename)
-}
-
-func delimiter() string {
-	return "---\n"
-}
-
-type BeginReport struct {
-	startTs     time.Time
-	commandLine string
-	runId       string
-	hostname    string
-	reportsDir  string
-	enableBegin bool
-}
-
-func (r *BeginReport) Type() string {
-	return "BEGIN"
-}
-
-func (r *BeginReport) String() string {
-	header := strings.Join([]string{
-		time.Now().Format(time.DateTime),
-		r.Type(),
-		"\"" + r.commandLine + "\"",
-		r.runId},
-		" ")
-
-	body := r.hostname
-
-	return strings.Join([]string{header, body, delimiter()}, "\n")
-}
-
-func (r *BeginReport) print() {
-	if r.enableBegin {
-		fmt.Print(r.String())
-	}
-}
-
-func (r *BeginReport) Write() {
-	r.print()
-	writeToFile(getReportFileName(r.reportsDir), r.String())
-}
-
-func NewBeginReport(cmd *command.Command) *BeginReport {
-	return &BeginReport{
-		startTs:     cmd.StartTs(),
-		commandLine: cmd.CommandLine(),
-		runId:       cmd.RunId(),
-		hostname:    cmd.Hostname(),
-		reportsDir:  cmd.ReportsDir(),
-		enableBegin: cmd.EnableBegin(),
-	}
-}
 
 type EndReport struct {
 	startTs              time.Time
