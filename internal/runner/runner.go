@@ -1,10 +1,13 @@
-package main
+package runner
 
 import (
 	"os"
 	"sync"
-	"golang.org/x/sys/unix"
 	"time"
+
+	"golang.org/x/sys/unix"
+
+	"cron_wrapper/internal/command"
 )
 
 type runChannels struct {
@@ -24,7 +27,7 @@ func newRunChannels() *runChannels {
 	}
 }
 
-func run(command *Command) {
+func Run(cmd *command.Command) {
 	wgCommand := new(sync.WaitGroup)
 
 	wgCommand.Add(1)
@@ -32,15 +35,15 @@ func run(command *Command) {
 
 	chs := newRunChannels()
 	defer chs.cleanup()
-	go runCommand(command, wgCommand, chs)
+	go runCommand(cmd, wgCommand, chs)
 
 	// TODO: replace killer thread using context package?
-	go runKiller(command.Timeout(), chs)
+	go runKiller(cmd.Timeout(), chs)
 	wgCommand.Wait()
 }
 
-func runCommand(command *Command, waitGroup *sync.WaitGroup, chs *runChannels) {
-	proc, err := os.StartProcess("/bin/bash", *command.CommandToExecute(), command.ProcAttrs())
+func runCommand(cmd *command.Command, waitGroup *sync.WaitGroup, chs *runChannels) {
+	proc, err := os.StartProcess("/bin/bash", *cmd.CommandToExecute(), cmd.ProcAttrs())
 	if err != nil {
 		panic(err)
 	}
@@ -51,7 +54,7 @@ func runCommand(command *Command, waitGroup *sync.WaitGroup, chs *runChannels) {
 		panic(err)
 	}
 
-	command.SetProcState(pState)
+	cmd.SetProcState(pState)
 	waitGroup.Done()
 
 	if pState.Exited() {

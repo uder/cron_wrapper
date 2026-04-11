@@ -1,4 +1,4 @@
-package main
+package report
 
 import (
 	"fmt"
@@ -7,21 +7,24 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"cron_wrapper/internal/command"
 )
 
-func prepareReportDir(reportDir string) {
+func PrepareReportDir(reportDir string) {
 	if _, err := os.Stat(reportDir); os.IsNotExist(err) {
 		err = os.Mkdir(reportDir, 0755)
 	}
 }
 
-func readFile(path string) string {
-	body, err := os.ReadFile(path)
+func readFile(filePath string) string {
+	body, err := os.ReadFile(filePath)
 	if err != nil {
 		panic(err)
 	}
 	return string(body)
 }
+
 func writeToFile(filename string, record string) {
 	f, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
@@ -52,7 +55,6 @@ type BeginReport struct {
 	commandLine string
 	runId       string
 	hostname    string
-	// db          database.DB
 	reportsDir  string
 	enableBegin bool
 }
@@ -82,18 +84,17 @@ func (r *BeginReport) print() {
 
 func (r *BeginReport) Write() {
 	r.print()
-	// r.insertDb()
 	writeToFile(getReportFileName(r.reportsDir), r.String())
 }
 
-func NewBeginReport(command *Command) *BeginReport {
+func NewBeginReport(cmd *command.Command) *BeginReport {
 	return &BeginReport{
-		startTs:     command.StartTs(),
-		commandLine: command.CommandLine(),
-		runId:       command.RunId(),
-		hostname:    command.Hostname(),
-		reportsDir:  command.ReportsDir(),
-		enableBegin: command.enableBegin(),
+		startTs:     cmd.StartTs(),
+		commandLine: cmd.CommandLine(),
+		runId:       cmd.RunId(),
+		hostname:    cmd.Hostname(),
+		reportsDir:  cmd.ReportsDir(),
+		enableBegin: cmd.EnableBegin(),
 	}
 }
 
@@ -166,27 +167,27 @@ func (r *EndReport) StringReport(withStdOut bool, withStdErr bool) string {
 		stderr = strings.TrimSuffix(strings.Join([]string{"STDERR:", r.stderr}, "\n"), "\n")
 	}
 
-	report := strings.Join([]string{header, meta}, "\n")
+	rep := strings.Join([]string{header, meta}, "\n")
 	for _, item := range []string{stdout, stderr, delimiter()} {
 		if item != "" {
-			report = strings.Join([]string{report, item}, "\n")
+			rep = strings.Join([]string{rep, item}, "\n")
 		}
 	}
-	return report
+	return rep
 }
 
 func (r *EndReport) print() {
-	var report string
+	var rep string
 	if r.exitCode == 0 && r.enableStoutOnSuccess {
-		report = r.StringReport(true, true)
+		rep = r.StringReport(true, true)
 	}
 	if r.exitCode == 0 && !r.enableStoutOnSuccess {
-		report = r.StringReport(false, false)
+		rep = r.StringReport(false, false)
 	}
 	if r.exitCode != 0 {
-		report = r.StringReport(true, true)
+		rep = r.StringReport(true, true)
 	}
-	fmt.Print(report)
+	fmt.Print(rep)
 }
 
 func (r *EndReport) Write() {
@@ -194,18 +195,18 @@ func (r *EndReport) Write() {
 	writeToFile(getReportFileName(r.reportsDir), r.String())
 }
 
-func NewEndReport(command *Command) *EndReport {
+func NewEndReport(cmd *command.Command) *EndReport {
 	return &EndReport{
-		startTs:              command.StartTs(),
-		exitCode:             command.procState.ExitCode(),
-		duration:             command.GetDuration(),
-		commandLine:          command.CommandLine(),
-		runId:                command.RunId(),
-		hostname:             command.Hostname(),
-		pid:                  command.procState.Pid(),
-		stdout:               readFile(command.procFiles.stdout.Name()),
-		stderr:               readFile(command.procFiles.stderr.Name()),
-		reportsDir:           command.ReportsDir(),
-		enableStoutOnSuccess: command.enableStdoutOnSuccess(),
+		startTs:              cmd.StartTs(),
+		exitCode:             cmd.ProcState().ExitCode(),
+		duration:             cmd.GetDuration(),
+		commandLine:          cmd.CommandLine(),
+		runId:                cmd.RunId(),
+		hostname:             cmd.Hostname(),
+		pid:                  cmd.ProcState().Pid(),
+		stdout:               readFile(cmd.StdoutPath()),
+		stderr:               readFile(cmd.StderrPath()),
+		reportsDir:           cmd.ReportsDir(),
+		enableStoutOnSuccess: cmd.EnableStdoutOnSuccess(),
 	}
 }

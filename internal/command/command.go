@@ -1,10 +1,12 @@
-package main
+package command
 
 import (
 	"math/rand/v2"
 	"os"
 	"syscall"
 	"time"
+
+	"cron_wrapper/internal/args"
 )
 
 func getHostname() string {
@@ -29,9 +31,8 @@ type Command struct {
 	startTs   time.Time
 	endTs     time.Time
 	hostname  string
-	cliArgs   *Args
+	cliArgs   *args.Args
 	procFiles *ProcFiles
-	//state     *CommandState
 	procState *os.ProcessState
 }
 
@@ -101,25 +102,32 @@ func (c *Command) ReportsDir() string {
 	return c.cliArgs.ReportsDir
 }
 
-func (c *Command) enableBegin() bool {
+func (c *Command) EnableBegin() bool {
 	return c.cliArgs.EnableBegin
 }
 
-func (c *Command) enableStdoutOnSuccess() bool {
+func (c *Command) EnableStdoutOnSuccess() bool {
 	return c.cliArgs.EnableStdoutOnSuccess
 }
 
-func (c *Command) cleanup() {
+func (c *Command) StdoutPath() string {
+	return c.procFiles.stdout.Name()
+}
+
+func (c *Command) StderrPath() string {
+	return c.procFiles.stderr.Name()
+}
+
+func (c *Command) Cleanup() {
 	c.procFiles.cleanup()
 }
 
-func NewCommand(args *Args) *Command {
+func NewCommand(a *args.Args) *Command {
 	return &Command{
 		runId:     generateId(8),
 		hostname:  getHostname(),
-		cliArgs:   args,
-		procFiles: NewProcFiles(args.TmpDir),
-		//state:     NewCommandState(),
+		cliArgs:   a,
+		procFiles: NewProcFiles(a.TmpDir),
 	}
 }
 

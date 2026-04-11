@@ -1,9 +1,10 @@
-package main
+package args
 
 import (
-	"github.com/alexflint/go-arg"
 	"strconv"
 	"strings"
+
+	"github.com/alexflint/go-arg"
 )
 
 type Args struct {
@@ -50,11 +51,11 @@ func (a *Args) DbType() string {
 	return a.dbType
 }
 
-func parseArgs() *Args {
-	var args Args
-	arg.MustParse(&args)
-	if args.SqliteDatabase != "" {
-		args.setDbType("sqlite")
+func ParseArgs() *Args {
+	var a Args
+	arg.MustParse(&a)
+	if a.SqliteDatabase != "" {
+		a.setDbType("sqlite")
 	}
-	return &args
+	return &a
 }
