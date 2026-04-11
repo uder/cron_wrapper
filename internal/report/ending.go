@@ -103,7 +103,7 @@ func (r *EndReport) print() {
 
 func (r *EndReport) Write() {
 	r.print()
-	writeToFile(getReportFileName(r.reportsDir), r.String())
+	WriteToFile(GetReportFileName(r.reportsDir), r.String())
 }
 
 func NewEndReport(cmd *command.Command) *EndReport {

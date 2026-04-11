@@ -20,7 +20,7 @@ func readFile(filePath string) string {
 	return string(body)
 }
 
-func writeToFile(filename string, record string) {
+func WriteToFile(filename string, record string) {
 	f, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		panic(err)
@@ -36,7 +36,7 @@ func writeToFile(filename string, record string) {
 	}
 }
 
-func getReportFileName(dir string) string {
+func GetReportFileName(dir string) string {
 	filename := time.Now().Format(time.DateOnly) + ".log"
 	return path.Join(dir, filename)
 }
