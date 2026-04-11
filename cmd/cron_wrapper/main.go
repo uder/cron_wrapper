@@ -22,11 +22,13 @@ func main() {
 	cmd.SetStartTs()
 	report.PrepareReportDir(cliArgs.ReportsDir)
 	beginReport := report.NewBeginReport(cmd)
+	report.PrintBeggining(beginReport)
 	report.WriteToFile(report.GetReportFileName(cliArgs.ReportsDir), report.BegginingString(beginReport))
 
 	runner.Run(cmd)
 
 	cmd.SetEndTs()
 	endReport := report.NewEndReport(cmd)
-	endReport.Write()
+	report.PrintEnding(endReport)
+	report.WriteToFile(report.GetReportFileName(cliArgs.ReportsDir), report.EndReportString(endReport))
 }
