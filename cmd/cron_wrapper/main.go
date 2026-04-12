@@ -14,7 +14,6 @@ func main() {
 	logger := logging.NewLogger(cliArgs.EnableDebug)
 	logger.Info(cliArgs.String())
 
-	// TODO: check duration precision. Why duration is always an int number of Seconds
 	// TODO: Wrap up actions with debug logs
 
 	cmd := command.NewCommand(cliArgs)

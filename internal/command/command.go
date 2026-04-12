@@ -78,7 +78,7 @@ func (c *Command) Pid() int {
 }
 
 func (c *Command) GetDuration() float64 {
-	return float64((c.endTs.UnixMilli() - c.startTs.UnixMilli()) / 1000)
+	return float64(c.endTs.UnixMilli() - c.startTs.UnixMilli()) / 1000
 }
 
 func (c *Command) Hostname() string {
