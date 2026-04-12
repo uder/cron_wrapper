@@ -27,13 +27,15 @@ func generateId(length int) string {
 }
 
 type Command struct {
-	runId     string
-	startTs   time.Time
-	endTs     time.Time
-	hostname  string
-	cliArgs   *args.Args
-	procFiles *ProcFiles
-	procState *os.ProcessState
+	runId      string
+	startTs    time.Time
+	endTs      time.Time
+	hostname   string
+	cliArgs    *args.Args
+	isTimedOut bool
+	procFiles  *ProcFiles
+	procState  *os.ProcessState
+	pid        int
 }
 
 func (c *Command) RunId() string {
@@ -67,6 +69,14 @@ func (c *Command) ProcState() *os.ProcessState {
 	return c.procState
 }
 
+func (c *Command) SetPid(pid int) {
+	c.pid = pid
+}
+
+func (c *Command) Pid() int {
+	return c.pid
+}
+
 func (c *Command) GetDuration() float64 {
 	return float64((c.endTs.UnixMilli() - c.startTs.UnixMilli()) / 1000)
 }
@@ -77,6 +87,14 @@ func (c *Command) Hostname() string {
 
 func (c *Command) Timeout() int {
 	return c.cliArgs.Timeout
+}
+
+func (c *Command) IsTimedOut() bool {
+	return c.isTimedOut
+}
+
+func (c *Command) SetIsTimedOut(isTimedOut bool) {
+	c.isTimedOut = isTimedOut
 }
 
 func (c *Command) CommandLine() string {

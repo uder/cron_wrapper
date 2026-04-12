@@ -10,6 +10,7 @@ type EndReport struct {
 	startTs              time.Time
 	exitCode             int
 	duration             float64
+	isTimedOut           bool
 	commandLine          string
 	runId                string
 	hostname             string
@@ -21,6 +22,10 @@ type EndReport struct {
 }
 
 func (r *EndReport) Type() string {
+	if r.isTimedOut {
+		return "TIMEOUT"
+	}
+
 	if r.exitCode == 0 {
 		return "INFO"
 	} else {
@@ -33,10 +38,11 @@ func NewEndReport(cmd *command.Command) *EndReport {
 		startTs:              cmd.StartTs(),
 		exitCode:             cmd.ProcState().ExitCode(),
 		duration:             cmd.GetDuration(),
+		isTimedOut:           cmd.IsTimedOut(),
 		commandLine:          cmd.CommandLine(),
 		runId:                cmd.RunId(),
 		hostname:             cmd.Hostname(),
-		pid:                  cmd.ProcState().Pid(),
+		pid:                  cmd.Pid(),
 		stdout:               readFile(cmd.StdoutPath()),
 		stderr:               readFile(cmd.StderrPath()),
 		reportsDir:           cmd.ReportsDir(),
