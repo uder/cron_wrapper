@@ -6,7 +6,7 @@ import (
 	"cron_wrapper/internal/command"
 )
 
-type EndReport struct {
+type EndingReport struct {
 	startTs              time.Time
 	exitCode             int
 	duration             float64
@@ -19,9 +19,10 @@ type EndReport struct {
 	stderr               string
 	reportsDir           string
 	enableStoutOnSuccess bool
+	isDisableChat        bool
 }
 
-func (r *EndReport) Type() string {
+func (r *EndingReport) Type() string {
 	if r.isTimedOut {
 		return "TIMEOUT"
 	}
@@ -33,8 +34,8 @@ func (r *EndReport) Type() string {
 	}
 }
 
-func NewEndReport(cmd *command.Command) *EndReport {
-	return &EndReport{
+func NewEndingReport(cmd *command.Command) *EndingReport {
+	return &EndingReport{
 		startTs:              cmd.StartTs(),
 		exitCode:             cmd.ProcState().ExitCode(),
 		duration:             cmd.GetDuration(),
@@ -47,5 +48,6 @@ func NewEndReport(cmd *command.Command) *EndReport {
 		stderr:               readFile(cmd.StderrPath()),
 		reportsDir:           cmd.ReportsDir(),
 		enableStoutOnSuccess: cmd.EnableStdoutOnSuccess(),
+		isDisableChat:           cmd.IsDisableChat(),
 	}
 }

@@ -13,6 +13,7 @@ type BeginningReport struct {
 	hostname    string
 	reportsDir  string
 	enableBegin bool
+	disableChat bool
 }
 
 func (r *BeginningReport) Type() string {
@@ -27,5 +28,6 @@ func NewBeginningReport(cmd *command.Command) *BeginningReport {
 		hostname:    cmd.Hostname(),
 		reportsDir:  cmd.ReportsDir(),
 		enableBegin: cmd.EnableBegin(),
+		disableChat: cmd.IsDisableChat(),
 	}
 }

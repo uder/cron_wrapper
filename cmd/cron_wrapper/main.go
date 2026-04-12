@@ -25,12 +25,12 @@ func main() {
 
 	beginningReport := report.NewBeginningReport(cmd)
 	fmt.Print(report.GetBegginingForSending(beginningReport))
-	report.WriteToFile(report.GetReportFileName(cliArgs.ReportsDir), report.BegginingString(beginningReport))
+	report.WriteToFile(report.GetReportFileName(cliArgs.ReportsDir), report.GetBegginingForLogging(beginningReport))
 
 	runner.Run(cmd)
 
 	cmd.SetEndTs()
-	endReport := report.NewEndReport(cmd)
-	fmt.Print(report.GetEnding(endReport))
-	report.WriteToFile(report.GetReportFileName(cliArgs.ReportsDir), report.EndReportString(endReport))
+	endReport := report.NewEndingReport(cmd)
+	fmt.Print(report.GetEndingForSending(endReport))
+	report.WriteToFile(report.GetReportFileName(cliArgs.ReportsDir), report.GetEndingForLogging(endReport))
 }

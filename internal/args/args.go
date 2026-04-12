@@ -23,6 +23,9 @@ type Args struct {
 	// TODO: revise the flag name and defaults for this flag
 	EnableStdoutOnSuccess bool `arg:"-s" default:"false" help:"whether to send stdout on success"`
 	EnableDebug           bool `arg:"-d" default:"false" help:"enable debug logging"`
+
+	//TODO: revise flag name and default value. Maybe the flag should be replaced with something else
+	DisableChat           bool `arg:"--disable-chat" default:"false" help:"whether to disable chat notifications"`
 }
 
 func (a *Args) String() string {
@@ -35,6 +38,7 @@ func (a *Args) String() string {
 		"Enable Begin: " + strconv.FormatBool(a.EnableBegin),
 		"Enable StdoutOnSuccess: " + strconv.FormatBool(a.EnableStdoutOnSuccess),
 		"Enable Debug: " + strconv.FormatBool(a.EnableDebug),
+		"Disable Chat: " + strconv.FormatBool(a.DisableChat),
 	},
 		"; ")
 }

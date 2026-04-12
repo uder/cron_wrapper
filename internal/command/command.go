@@ -128,6 +128,10 @@ func (c *Command) EnableBegin() bool {
 	return c.cliArgs.EnableBegin
 }
 
+func (c *Command) IsDisableChat() bool {
+	return c.cliArgs.DisableChat
+}
+
 func (c *Command) EnableStdoutOnSuccess() bool {
 	return c.cliArgs.EnableStdoutOnSuccess
 }

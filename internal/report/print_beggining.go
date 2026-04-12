@@ -6,6 +6,9 @@ import (
 )
 
 func GetBegginingForSending(r *BeginningReport) string {
+	if r.disableChat {
+		return ""
+	}
 	if r.enableBegin {
 		return BegginingString(r)
 	}
