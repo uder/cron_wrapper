@@ -6,7 +6,7 @@ import (
 	"cron_wrapper/internal/command"
 )
 
-type BeginReport struct {
+type BeginningReport struct {
 	startTs     time.Time
 	commandLine string
 	runId       string
@@ -15,12 +15,12 @@ type BeginReport struct {
 	enableBegin bool
 }
 
-func (r *BeginReport) Type() string {
+func (r *BeginningReport) Type() string {
 	return "BEGIN"
 }
 
-func NewBeginReport(cmd *command.Command) *BeginReport {
-	return &BeginReport{
+func NewBeginningReport(cmd *command.Command) *BeginningReport {
+	return &BeginningReport{
 		startTs:     cmd.StartTs(),
 		commandLine: cmd.CommandLine(),
 		runId:       cmd.RunId(),
