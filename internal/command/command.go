@@ -120,6 +120,10 @@ func (c *Command) ReportsDir() string {
 	return c.cliArgs.ReportsDir
 }
 
+func (c *Command) TmpDir() string {
+	return c.cliArgs.TmpDir
+}
+
 func (c *Command) EnableBegin() bool {
 	return c.cliArgs.EnableBegin
 }
@@ -134,6 +138,10 @@ func (c *Command) StdoutPath() string {
 
 func (c *Command) StderrPath() string {
 	return c.procFiles.stderr.Name()
+}
+
+func (c *Command) IsParallel() bool {
+	return c.cliArgs.EnableParallel
 }
 
 func (c *Command) Cleanup() {

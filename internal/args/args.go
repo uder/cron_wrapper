@@ -11,8 +11,7 @@ type Args struct {
 	Command string `arg:"positional, required" help:"command to execute"`
 	Timeout int    `arg:"-t,--timeout" default:"7200" help:"timeout in seconds"`
 
-	// TODO Revise the flag and the logic for parallel execution
-	Parallel int `arg:"-p,--parallel" default:"1" help:"max number of parallel executions"`
+	EnableParallel bool `arg:"-p,--parallel" default:"false" help:"whether to alllow running in parallel mode"`
 
 	// TODO: change default to /tmp after development. Revise the flag name
 	TmpDir string `arg:"--tmpdir" default:"./tmp" help:"directory to store temporary files"`
@@ -30,7 +29,7 @@ func (a *Args) String() string {
 	return strings.Join([]string{
 		"Command: " + a.Command,
 		"Timeout: " + strconv.Itoa(a.Timeout),
-		"Parallel: " + strconv.Itoa(a.Parallel),
+		"Enable Parallel: " + strconv.FormatBool(a.EnableParallel),
 		"Tmp Dir: " + a.TmpDir,
 		"Reports Dir: " + a.ReportsDir,
 		"Enable Begin: " + strconv.FormatBool(a.EnableBegin),
