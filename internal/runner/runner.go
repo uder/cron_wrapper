@@ -8,13 +8,13 @@ import (
 	"cron_wrapper/internal/command"
 )
 
-type Quit struct{}
+type quit struct{}
 
 func Run(cmd *command.Command) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(cmd.Timeout())*time.Second)
 	defer cancel()
 
-	chQuit := make(chan Quit)
+	chQuit := make(chan quit)
 
 	proc, err := os.StartProcess("/bin/bash", *cmd.CommandToExecute(), cmd.ProcAttrs())
 
@@ -31,7 +31,7 @@ func Run(cmd *command.Command) {
 			panic(err)
 		}
 		cmd.SetProcState(pState)
-		chQuit <- Quit{}
+		chQuit <- quit{}
 	}()
 
 	select {
