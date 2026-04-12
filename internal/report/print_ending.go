@@ -1,24 +1,23 @@
 package report
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 	"time"
 )
 
-func PrintEnding(r *EndReport) {
-	var rep string
+func GetEnding(r *EndReport) string{
+	var report string
 	if r.exitCode == 0 && r.enableStoutOnSuccess {
-		rep = EndingStringReport(r, true, true)
+		report = EndingStringReport(r, true, true)
 	}
 	if r.exitCode == 0 && !r.enableStoutOnSuccess {
-		rep = EndingStringReport(r, false, false)
+		report = EndingStringReport(r, false, false)
 	}
 	if r.exitCode != 0 {
-		rep = EndingStringReport(r, true, true)
+		report = EndingStringReport(r, true, true)
 	}
-	fmt.Print(rep)
+	return report
 }
 
 func EndReportString(r *EndReport) string {

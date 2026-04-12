@@ -1,18 +1,15 @@
 package report
 
 import (
-	"fmt"
 	"strings"
 	"time"
 )
 
-func PrintBeggining(r *BeginReport) {
-	if r.enableBegin {
-		fmt.Print(BegginingString(r))
-	}
-}
-
 func BegginingString(r *BeginReport) string {
+	if !r.enableBegin {
+		return ""
+	}
+
 	header := strings.Join([]string{
 		time.Now().Format(time.DateTime),
 		r.Type(),

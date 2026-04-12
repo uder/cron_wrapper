@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"cron_wrapper/internal/args"
 	"cron_wrapper/internal/command"
 	"cron_wrapper/internal/logging"
@@ -23,13 +24,13 @@ func main() {
 	report.PrepareReportDir(cliArgs.ReportsDir)
 
 	beginReport := report.NewBeginReport(cmd)
-	report.PrintBeggining(beginReport)
+	fmt.Print(report.BegginingString(beginReport))
 	report.WriteToFile(report.GetReportFileName(cliArgs.ReportsDir), report.BegginingString(beginReport))
 
 	runner.Run(cmd)
 
 	cmd.SetEndTs()
 	endReport := report.NewEndReport(cmd)
-	report.PrintEnding(endReport)
+	fmt.Print(report.GetEnding(endReport))
 	report.WriteToFile(report.GetReportFileName(cliArgs.ReportsDir), report.EndReportString(endReport))
 }
