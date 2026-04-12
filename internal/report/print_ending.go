@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	)
+)
 
 func PrintEnding(r *EndReport) {
 	var rep string

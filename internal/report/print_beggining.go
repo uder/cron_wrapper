@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
-	)
-
+)
 
 func PrintBeggining(r *BeginReport) {
 	if r.enableBegin {

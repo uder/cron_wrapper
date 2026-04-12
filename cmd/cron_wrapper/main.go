@@ -21,6 +21,7 @@ func main() {
 
 	cmd.SetStartTs()
 	report.PrepareReportDir(cliArgs.ReportsDir)
+
 	beginReport := report.NewBeginReport(cmd)
 	report.PrintBeggining(beginReport)
 	report.WriteToFile(report.GetReportFileName(cliArgs.ReportsDir), report.BegginingString(beginReport))

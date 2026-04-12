@@ -8,11 +8,11 @@ import (
 )
 
 type Args struct {
-	Command  string `arg:"positional, required" help:"command to execute"`
-	Timeout  int    `arg:"-t,--timeout" default:"7200" help:"timeout in seconds"`
+	Command string `arg:"positional, required" help:"command to execute"`
+	Timeout int    `arg:"-t,--timeout" default:"7200" help:"timeout in seconds"`
 
 	// TODO Revise the flag and the logic for parallel execution
-	Parallel int    `arg:"-p,--parallel" default:"1" help:"max number of parallel executions"`
+	Parallel int `arg:"-p,--parallel" default:"1" help:"max number of parallel executions"`
 
 	// TODO: change default to /tmp after development. Revise the flag name
 	TmpDir string `arg:"--tmpdir" default:"./tmp" help:"directory to store temporary files"`
@@ -39,7 +39,6 @@ func (a *Args) String() string {
 	},
 		"; ")
 }
-
 
 func ParseArgs() *Args {
 	var a Args
