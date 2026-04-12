@@ -18,7 +18,7 @@
 
 ## Ending report
 1. Always placed in log in full form
-2. Send to chat 
+2. Send to chat
     a. if command exit code is non-zero then Send full form
     b. if EnableStdoutOnSuccess then send full form to chat on success
     c. If DisableChat then don't send to chat
@@ -46,8 +46,8 @@
             - begining ts. ISO8601
             - process name (?)
             - process pid
-            - STDOUT. Command stdout. Omit if empty 
-            - STDERR. Command stderr. Omit if empty 
+            - STDOUT. Command stdout. Omit if empty
+            - STDERR. Command stderr. Omit if empty
             - example:
             ```
             2026-04-12T00:00:17 INFO 0 14.27 "/www/sp/command cache SaleAutoWeekHits --days=5" e71e1036
