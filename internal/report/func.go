@@ -37,7 +37,7 @@ func WriteToFile(filename string, record string) {
 }
 
 func GetReportFileName(dir string) string {
-	filename := time.Now().Format(time.DateOnly) + ".log"
+	filename := time.Now().Format(time.DateOnly) + ".cron.log"
 	return path.Join(dir, filename)
 }
 
